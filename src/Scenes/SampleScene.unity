@@ -5504,6 +5504,8 @@ MonoBehaviour:
   main_camera: {fileID: 963194225}
   fov_constant: 2384
   scene_center: {x: 0, y: 0, z: 0}
+  plane_speed: 1
+  plane: {fileID: 8781357182736650420, guid: 2c3ce5f47146a3e49967f15f130275f3, type: 3}
 --- !u!1 &1338807174
 GameObject:
   m_ObjectHideFlags: 0

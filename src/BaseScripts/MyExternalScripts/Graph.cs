@@ -43,7 +43,7 @@ public class Graph
     }
 
 
-    public (List<int>, int) Dijkstra(int origin_node_index, int end_node_index)
+    public (List<int>, int) Dijkstra(int origin_node_index, int end_node_index) // Dijkstra crashes if there are no edges.
     {
         // Starts the weights list with -1 (infinite) for nodes other than the origin and 0 for the origin.
         List<int> weights_list = new();

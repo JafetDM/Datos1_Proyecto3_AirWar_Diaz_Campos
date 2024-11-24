@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using System;
 using TMPro;
+using System.Collections.Generic;
 // using myUnityScripts;
 
 public class GameManagement : MonoBehaviour
@@ -19,7 +20,10 @@ public class GameManagement : MonoBehaviour
     public GameObject main_camera;
     public float fov_constant = 3487;
     public Vector3 scene_center;
-    
+    public int plane_speed = 1;
+    public GameObject plane;
+    // public float plane_base_z = -2;
+    private int spawn_plane_timer = 180;   // This controls first plane spawn.
     private void Awake()
     {
         Debug.Log("HAS ENTERED AWAKE FUNCTION IN THE GAME MANAGER.");
@@ -67,10 +71,49 @@ public class GameManagement : MonoBehaviour
 
     void Update()
     {
+        // Spawn plane.
+        if (spawn_plane_timer < Time.frameCount && UnityEngine.Random.Range(0,60) == 1)
+        {
+            SpawnPlane();
+            Debug.Log("Plane spawns");
+            spawn_plane_timer = Time.frameCount + 300; //Adjust this to a natural plane spawn rate.
+        }
+
 
     }
 
+    public void SpawnPlane()
+    {
+        if (LZs.adjacency_list_nodes.Count <= 1)
+        {
+            Debug.Log("NOT ENOUGH NODES.");
+            return;
+        }
 
+        int origin_node_index = UnityEngine.Random.Range(0,LZs.adjacency_list_nodes.Count);
+        int end_node_index = UnityEngine.Random.Range(0,LZs.adjacency_list_nodes.Count);
+        while(end_node_index == origin_node_index)
+        {
+            end_node_index = UnityEngine.Random.Range(0,LZs.adjacency_list_nodes.Count);
+        }
+
+        (List<int> path, int weight) dijkstra = LZs.Dijkstra(origin_node_index, end_node_index);
+        List<Vector2> flight_plan_nodes = new();
+        // Gets a List<Vector2>flight_plan_nodes of coords from the List<int>path of indexes.
+        int node_amount = dijkstra.path.Count;
+        for (int i = 0; i < node_amount; i++)
+        {
+            flight_plan_nodes.Add(LZs.adjacency_list_nodes[dijkstra.path[i]].coords);
+        }
+        
+
+        Vector2 start_coords = LZs.adjacency_list_nodes[origin_node_index].coords;
+        // z value is irrelevant as it will be updated on Start() by the plane.
+        Debug.Log("Plane is stantiated at" + start_coords + " at SpawnPlane");
+        GameObject instantiated_plane = Instantiate(plane, start_coords, Quaternion.identity);
+        instantiated_plane.GetComponent<PlaneBehaviour>().flight_plan_nodes = flight_plan_nodes;
+
+    }
 
 
 
