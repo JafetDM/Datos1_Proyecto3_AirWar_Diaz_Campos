@@ -14,8 +14,8 @@ public class GameManagement : MonoBehaviour
     public static GameManagement Instance { get; private set; }
     public DataStructures.Lists.MatrixLinkedList<bool> map;
     public Graph LZs;
-    public int ancho = 72;  // Number of tiles
-    public int largo = 35;  // Number of tiles
+    public int ancho = 72;  // Number of tiles x
+    public int largo = 35;  // Number of tiles y
     public float scale = 0.5f; // nivel de escalas, para dar detalle
     public GameObject main_camera;
     public float fov_constant = 3487;
@@ -24,6 +24,8 @@ public class GameManagement : MonoBehaviour
     public GameObject plane;
     // public float plane_base_z = -2;
     private int spawn_plane_timer = 180;   // This controls first plane spawn.
+    public int points = 0;
+    public GameObject points_UI;
     private void Awake()
     {
         Debug.Log("HAS ENTERED AWAKE FUNCTION IN THE GAME MANAGER.");
@@ -78,7 +80,9 @@ public class GameManagement : MonoBehaviour
             Debug.Log("Plane spawns");
             spawn_plane_timer = Time.frameCount + 300; //Adjust this to a natural plane spawn rate.
         }
-
+        // Show Points
+        TextMeshProUGUI points_text_box = points_UI.GetComponentInChildren<TextMeshProUGUI>();
+        points_text_box.text = "Points: " + points.ToString();
 
     }
 

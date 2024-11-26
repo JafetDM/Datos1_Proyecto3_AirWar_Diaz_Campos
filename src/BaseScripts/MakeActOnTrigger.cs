@@ -19,13 +19,15 @@ public class MakeActOnTrigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Vector3 aboveTriggerer = new();
-        float sizeTriggerer = other.gameObject.transform.lossyScale.y;  //lossyScale or localScale?
-        aboveTriggerer = other.gameObject.transform.position;
-        aboveTriggerer.y += 2*sizeTriggerer;
-        other.gameObject.transform.RotateAround(aboveTriggerer, Vector3.forward, 180);
+        // Vector3 aboveTriggerer = new();
+        // float sizeTriggerer = other.gameObject.transform.lossyScale.y;  //lossyScale or localScale?
+        // aboveTriggerer = other.gameObject.transform.position;
+        // aboveTriggerer.y += 2*sizeTriggerer;
+        // other.gameObject.transform.RotateAround(aboveTriggerer, Vector3.forward, 180);
         
-        Instantiate(particleOnTrigger, transform.position, Quaternion.identity);
+        GameManagement.Instance.points ++;
+        Destroy(other.gameObject);
+        // Instantiate(particleOnTrigger, transform.position, Quaternion.identity);
         Destroy(gameObject);
 
     }

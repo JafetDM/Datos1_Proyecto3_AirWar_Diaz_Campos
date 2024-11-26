@@ -47,6 +47,10 @@ public class MapGenerator :MonoBehaviour
     void GenerateMap()  // Generates the graphic and logical world maps. 
     {
         int LZ_generation_rate = 5*(int)Mathf.Sqrt(ancho*largo);
+
+        int threshold = ancho*largo * 10 /27;
+        int threshold_i = 0;
+
         for (int x = 0; x < ancho; x++)
         {
             for (int y=0; y < largo; y++)
@@ -64,10 +68,21 @@ public class MapGenerator :MonoBehaviour
 
                 //Decides whether or not to create a landing zone before deciding the tile type.
                 bool create_LZ = false;
+                // Forces at least three nodes to appear.
                 if (UnityEngine.Random.Range(0, LZ_generation_rate) == 1 && x_proportion > 0.15f && x_proportion < 0.85  &&  y_proportion > 0.15f && y_proportion < 0.85)
                 {
                     create_LZ = true;
                     Debug.Log("create_LZ = true");
+                }
+                else
+                {
+                    threshold_i ++;
+                }
+                if (threshold_i >= threshold)
+                {
+                    create_LZ = true;
+                    Debug.Log("create_LZ = true. Threshold reached.");
+                    threshold_i = 0;
                 }
                 // else
                 // {
@@ -133,11 +148,12 @@ public class MapGenerator :MonoBehaviour
             // 1/4 of the numbers from nodes_to_connect_indexes is removed.
             for (int j = 0; j < (node_amount-i-1)/4+1; j++)
             {
-                if (nodes_to_connect_indexes.Count > 0) // List can't be empty.
+                if (nodes_to_connect_indexes.Count > 1) // List can't be empty.
                 {
                     nodes_to_connect_indexes.RemoveAt(UnityEngine.Random.Range(0,nodes_to_connect_indexes.Count));
                 }
             }
+            // If no edges were made it 
             // Conncects the current node i to the nodes from nodes_to_connect_indexes. Calculates the weight of the edge for each destination based on terrain type.
             foreach (int node_index in nodes_to_connect_indexes)
             {
